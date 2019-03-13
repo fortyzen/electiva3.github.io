@@ -108,6 +108,10 @@ section {
     width: 500px;
 }
 
+#container {
+    margin: 0 auto;
+}
+
 .title{
     display: block;
     position: relative;
