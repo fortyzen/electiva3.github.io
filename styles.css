@@ -92,7 +92,7 @@ body {
     background: #fff;
     text-align: center;
     font-style: italic;
-    color: black;
+    color: rgb(13, 133, 53);
 }
 
 section {
@@ -122,6 +122,7 @@ section {
     cursor: pointer;
     counter-increment: pending-items;
     font-size: 1.2em;
+    color: blueviolet;
 }
 
 .title:hover{
