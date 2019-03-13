@@ -128,3 +128,11 @@ section {
 .title:hover{
     background: rgba(#fff, .4);
 }
+
+#incomplete-tasks{
+    list-style:none;
+}
+
+#completed-tasks{
+    list-style:none;
+}
