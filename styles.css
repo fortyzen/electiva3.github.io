@@ -87,7 +87,7 @@ body {
 .title_p {
     font-family: 'Open Sans';
     font-weight: 300;
-    font-size: 1.8em;
+    font-size: 1.7em;
     margin: 0;
     background: #fff;
     text-align: center;
@@ -121,6 +121,7 @@ section {
     border-left: solid 4px teal;
     cursor: pointer;
     counter-increment: pending-items;
+    font-size: 1.2em;
 }
 
 .title:hover{
