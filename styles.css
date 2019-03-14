@@ -142,3 +142,7 @@ hr {
     background-color: blueviolet;
     border-color: blueviolet;
 }
+
+#new-task{
+    border-radius: 50px 50px;
+}
