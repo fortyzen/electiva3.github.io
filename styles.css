@@ -148,4 +148,11 @@ hr {
     padding: 5px;
     margin: 5px 5px 5px 25px;
     box-sizing: border-box;
+    -webkit-text-stroke: 1px black;
+    color: transparent; 
+    text-shadow: 3px 3px 2px #696; 
+}
+
+#new-task:hover{
+    background-color: #89ceee;
 }
