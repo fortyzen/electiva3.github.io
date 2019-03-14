@@ -1,5 +1,4 @@
 body {
-	width: 100wh;
 	height: 90vh;
 	color: #fff;
 	background: linear-gradient(-60deg, #EE7752, #E73C7E, #23A6D5, #23D5AB);
@@ -121,14 +120,13 @@ section {
     border-top: dashed 1px #fff;
     border-bottom: dashed 1px #fff;
     border-left: solid 4px teal;
-    cursor: pointer;
     counter-increment: pending-items;
     font-size: 1.2em;
     color: blueviolet;
 }
 
 .title:hover{
-    background: rgba(#fff, .4);
+    background: rgba(255,0,0,0.3);
 }
 
 #incomplete-tasks{
