@@ -144,5 +144,8 @@ hr {
 }
 
 #new-task{
-    border-radius: 50px 50px;
+    border-radius: 35px 0px 35px 0px;
+    padding: 5px;
+    margin: 5px 5px 5px 25px;
+    box-sizing: border-box;
 }
