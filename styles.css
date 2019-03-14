@@ -58,6 +58,7 @@ body {
     transition: all 0.2s;
     text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);
     background-color:#4eb5f1;
+    cursor: pointer;
 }
 
 .edit:hover{
@@ -79,6 +80,7 @@ body {
     text-align:center;
     transition: all 0.2s;
     background-color:#f14e4e;
+    cursor: pointer;
 }
 .delete:hover{
     border-color: rgba(255, 255, 255, 1);
