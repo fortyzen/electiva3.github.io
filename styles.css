@@ -136,3 +136,9 @@ section {
 #completed-tasks{
     list-style:none;
 }
+
+hr {
+    height: 3px;
+    background-color: blueviolet;
+    border-color: blueviolet;
+}
