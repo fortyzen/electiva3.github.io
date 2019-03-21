@@ -177,3 +177,20 @@ hr {
     background-color: #89ceee;
 }
 
+.error-bar {
+    border: 1px solid red;
+    color: red;
+    font-weight: bold;
+    background-color: #ffbdce;
+    padding: 5px;
+    border-radius: 10px;
+    font-size: 10px;
+}
+
+.hide-bar {
+    visibility: hidden;
+}
+
+.show-bar {
+    visibility: visible;
+}
