@@ -1,0 +1,330 @@
+{
+	"_type": "export",
+	"__export_format": 3,
+	"__export_date": "2019-03-14T02:48:55.101Z",
+	"__export_source": "insomnia.desktop.app:v6.3.2",
+	"resources": [
+		{
+			"_id": "wrk_6ec06bd5802e4e9b88087ab5abe19f79",
+			"created": 1551110510167,
+			"description": "",
+			"modified": 1551110510167,
+			"name": "ArqWeb",
+			"parentId": null,
+			"_type": "workspace"
+		},
+		{
+			"_id": "env_2649a15b4a5e48d2baf5079c2c8fbb1c",
+			"color": null,
+			"created": 1551110510449,
+			"data": {
+				"host": "localhost",
+				"port": 5000,
+				"protocol": "http"
+			},
+			"isPrivate": false,
+			"metaSortKey": 1551110510449,
+			"modified": 1552524477101,
+			"name": "New Environment",
+			"parentId": "wrk_6ec06bd5802e4e9b88087ab5abe19f79",
+			"_type": "environment"
+		},
+		{
+			"_id": "jar_9d83a8d3f1e14ce3aac87cdd40e8cb22",
+			"cookies": [],
+			"created": 1551110510470,
+			"modified": 1551110510470,
+			"name": "Default Jar",
+			"parentId": "wrk_6ec06bd5802e4e9b88087ab5abe19f79",
+			"_type": "cookie_jar"
+		},
+		{
+			"_id": "fld_55acd76e8564409586788955a4389309",
+			"created": 1552531357278,
+			"description": "A simple RESTful API for tasks management",
+			"environment": {},
+			"metaSortKey": -1552531357278,
+			"modified": 1552531357278,
+			"name": "Tasks RESTful API",
+			"parentId": "wrk_6ec06bd5802e4e9b88087ab5abe19f79",
+			"_type": "request_group"
+		},
+		{
+			"_id": "req_50e603546b234fe0bca25f65681b6851",
+			"authentication": {},
+			"body": {},
+			"created": 1551110648184,
+			"description": "",
+			"headers": [],
+			"isPrivate": false,
+			"metaSortKey": -1551110648184,
+			"method": "OPTIONS",
+			"modified": 1551110669141,
+			"name": "Discover Service",
+			"parameters": [],
+			"parentId": "wrk_6ec06bd5802e4e9b88087ab5abe19f79",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingMaxTimelineDataSize": 1000,
+			"settingRebuildPath": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "{{ protocol  }}://{{ host  }}:{{ port  }}/",
+			"_type": "request"
+		},
+		{
+			"_id": "req_f7d484ee32fe40a3ab0f08515e4fdde2",
+			"authentication": {},
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n\t\"nombre\": \"Carpinchosaurio\",\n\t\"apellido\": \"Rex\",\n\t\"email\": \"carpinchito@loscarpinchos.com\"\n}"
+			},
+			"created": 1551112062372,
+			"description": "",
+			"headers": [
+				{
+					"disabled": false,
+					"id": "pair_4168f090bff54ac5bb99614acab9b722",
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"isPrivate": false,
+			"metaSortKey": -1551112062372,
+			"method": "POST",
+			"modified": 1551112582896,
+			"name": "Storing Data",
+			"parameters": [],
+			"parentId": "wrk_6ec06bd5802e4e9b88087ab5abe19f79",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingMaxTimelineDataSize": 1000,
+			"settingRebuildPath": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "{{ protocol  }}://{{ host  }}:{{ port  }}/",
+			"_type": "request"
+		},
+		{
+			"_id": "env_65671889187542eab9b84189ac96c035",
+			"color": null,
+			"created": 1551110554822,
+			"data": {},
+			"isPrivate": false,
+			"metaSortKey": 1551110554822,
+			"modified": 1552524469609,
+			"name": "Development",
+			"parentId": "env_2649a15b4a5e48d2baf5079c2c8fbb1c",
+			"_type": "environment"
+		},
+		{
+			"_id": "env_4c88b96e7090467cb07af7a569169360",
+			"color": null,
+			"created": 1551110570486,
+			"data": {
+				"host": "obscure-meadow-82990.herokuapp.com",
+				"port": 80,
+				"protocol": "http"
+			},
+			"isPrivate": false,
+			"metaSortKey": 1551110570486,
+			"modified": 1551110635416,
+			"name": "Heroku 1",
+			"parentId": "env_2649a15b4a5e48d2baf5079c2c8fbb1c",
+			"_type": "environment"
+		},
+		{
+			"_id": "req_018b655c3cd840278a9374513755057e",
+			"authentication": {},
+			"body": {},
+			"created": 1552531357265,
+			"description": "Deletes a task",
+			"headers": [],
+			"isPrivate": false,
+			"metaSortKey": -1552531357265,
+			"method": "DELETE",
+			"modified": 1552531519022,
+			"name": "/tasks/:id",
+			"parameters": [],
+			"parentId": "fld_55acd76e8564409586788955a4389309",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingMaxTimelineDataSize": 1000,
+			"settingRebuildPath": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "https://task-backend-fpuna.herokuapp.com/tasks/2",
+			"_type": "request"
+		},
+		{
+			"_id": "req_d01a254f7f404fa1907be73c0be3f205",
+			"authentication": {},
+			"body": {
+				"mimeType": "",
+				"text": "{\n\t\"status\":\"TERMINADO\"\n}"
+			},
+			"created": 1552531357267,
+			"description": "Create a task",
+			"headers": [
+				{
+					"name": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"name": "Accept",
+					"value": "application/json"
+				}
+			],
+			"isPrivate": false,
+			"metaSortKey": -1552531357267,
+			"method": "PUT",
+			"modified": 1552531357267,
+			"name": "/tasks/:id",
+			"parameters": [],
+			"parentId": "fld_55acd76e8564409586788955a4389309",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingMaxTimelineDataSize": 1000,
+			"settingRebuildPath": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "https://task-backend-fpuna.herokuapp.com/tasks/1",
+			"_type": "request"
+		},
+		{
+			"_id": "req_fa283d6ffd1140ceb2e12b744d3c368a",
+			"authentication": {},
+			"body": {},
+			"created": 1552531357269,
+			"description": "Retrieve a single task given its id",
+			"headers": [
+				{
+					"id": "pair_116d8083916d4a8bafb60ce7bada6835",
+					"name": "Accept",
+					"value": "application/json"
+				}
+			],
+			"isPrivate": false,
+			"metaSortKey": -1552531357269,
+			"method": "GET",
+			"modified": 1552531501501,
+			"name": "/tasks/:id",
+			"parameters": [],
+			"parentId": "fld_55acd76e8564409586788955a4389309",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingMaxTimelineDataSize": 1000,
+			"settingRebuildPath": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "https://task-backend-fpuna.herokuapp.com/tasks/2",
+			"_type": "request"
+		},
+		{
+			"_id": "req_5030ea16b5274a0cb88b7d5397f44fb4",
+			"authentication": {},
+			"body": {},
+			"created": 1552531357270,
+			"description": "Get the options of this endpoint",
+			"headers": [],
+			"isPrivate": false,
+			"metaSortKey": -1552531357270,
+			"method": "OPTIONS",
+			"modified": 1552531357270,
+			"name": "/tasks/:id",
+			"parameters": [],
+			"parentId": "fld_55acd76e8564409586788955a4389309",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingMaxTimelineDataSize": 1000,
+			"settingRebuildPath": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "https://task-backend-fpuna.herokuapp.com/tasks/1",
+			"_type": "request"
+		},
+		{
+			"_id": "req_4e9301f195734b4da5f89bab76b8da38",
+			"authentication": {},
+			"body": {
+				"mimeType": "",
+				"text": "{\n\t\"description\":\"Terminar la tarea\"\n}"
+			},
+			"created": 1552531357273,
+			"description": "Create a task",
+			"headers": [
+				{
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"isPrivate": false,
+			"metaSortKey": -1552531357273,
+			"method": "POST",
+			"modified": 1552531357273,
+			"name": "/tasks",
+			"parameters": [],
+			"parentId": "fld_55acd76e8564409586788955a4389309",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingMaxTimelineDataSize": 1000,
+			"settingRebuildPath": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "https://task-backend-fpuna.herokuapp.com/tasks",
+			"_type": "request"
+		},
+		{
+			"_id": "req_5dfd107a8c7d4e63a5bc1ca8bab70ab2",
+			"authentication": {},
+			"body": {},
+			"created": 1552531357274,
+			"description": "REtrieve all tasks",
+			"headers": [
+				{
+					"id": "pair_dba10ce54caf482e914bd16e16c46d3d",
+					"name": "Accept",
+					"value": "application/json"
+				}
+			],
+			"isPrivate": false,
+			"metaSortKey": -1552531357274,
+			"method": "GET",
+			"modified": 1552531376655,
+			"name": "/tasks",
+			"parameters": [],
+			"parentId": "fld_55acd76e8564409586788955a4389309",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingMaxTimelineDataSize": 1000,
+			"settingRebuildPath": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "https://task-backend-fpuna.herokuapp.com/tasks",
+			"_type": "request"
+		},
+		{
+			"_id": "req_5f51d312d76c4f7993ee2380df6f4c13",
+			"authentication": {},
+			"body": {},
+			"created": 1552531357277,
+			"description": "Get the options of this endpoint",
+			"headers": [],
+			"isPrivate": false,
+			"metaSortKey": -1552531357277,
+			"method": "OPTIONS",
+			"modified": 1552531357277,
+			"name": "/tasks",
+			"parameters": [],
+			"parentId": "fld_55acd76e8564409586788955a4389309",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingMaxTimelineDataSize": 1000,
+			"settingRebuildPath": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "https://task-backend-fpuna.herokuapp.com/tasks",
+			"_type": "request"
+		}
+	]
+}
