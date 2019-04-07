@@ -1,11 +1,4 @@
-/**
- *
- *
- * @author carpincho
- * @since 04/03/19.
- * @version 1.0
- */
-(() => {
+(($) => {
     'use strict';
 
     const API_URL = 'https://task-backend-fpuna.herokuapp.com/tasks';
@@ -29,36 +22,57 @@
      */
     document.onreadystatechange = () => {
 
-        // TODO ITEM 0: Llamar al API con el método GET para recuperar la lista de tareas existentes.
-        //  - Como parámetro `callbackSuccess` envía la función `loadTasks`.
-        //  - Como parámetro `callbackError` envía una función que llame al método `showError` 
-        //    enviando un mensaje de error
-        //  - La llamada debe ser asíncrona.
-        
+        //ITEM 0: Busca una función equivalente a document.onreadystatechange proveída por jQuery 
+        //y asegurate que dentro se ejecute una función que llame al API con el método GET 
+        //para recuperar la lista de tareas existentes. 
+        let $tareas_pendientes = $('#incomplete-task');
+        let $tareas_completadas = $('#completed-task');
         let tareas;
-        Ajax.sendGetRequest(API_URL, tareas, MediaFormat.JSON, loadTasks, showError, true);
+        /*$.ajax({
+            type: 'GET',
+            url: API_URL,
+            success: function(tareas) {
+                $.each(tareas, function(i, tarea){
+                    if(tarea.status === TASK_STATUS.PENDING){
+                        console.log(tarea.status + ' ' + tarea.description);
+                        $('#incomplete-task').append('<li>'+
+                        '<label><input type="checkbox"/>'+ tarea.description + '</label>'
+                        +'<button class="edit">Editar</button>'+
+                        '<button class="delete">Borrar</button>'+
+                        '</li>');
+                    } else{
+                        console.log(tarea.status + ' completas');
+                        $tareas_completadas.append(
+                            '<label>'+
+                                '<hr/>'+
+                        '<input type="checkbox" checked> '+
+                        tarea.description +
+                        ' </label> '+
+                        ' <button class="edit">Editar</button> '+
+                        ' <button class="delete">Borrar</button> ');
+                    }
+                });
+            }
+        });*/
+        console.log('otra forma');
+        $.get(API_URL, loadTasks(tareas), "json");
+        $.each(tareas, function(i, tarea){
+                console.log(tarea.description);
+            }
+        );
+        //console.log(tareas);
     };
+
     /**
      * This method displays an error on the page.
      * @param code the status code of the HTTP response.
      * @param text error message
      */
     const showError = (code, text) => {
-        // TODO ITEM 6 recuperar el elemento HTML con la clase `error-bar` y modificar el HTML interno de
-        // manera a mostrar el mensaje de error.
-        // El mensaje de error debe desaparacer luego de 3 segundos.
-
-        var contentError = document.getElementsByClassName('error-bar');
-
-        var modal = document.getElementById('myModal');
-        modal.style.display = "block";     
-        
-        contentError[0].innerText = text
-        
-        setTimeout(function() {
-            contentError[0].innerText = "";
-            modal.style.display = "none";
-        }, 3000); //3000 milisegundos
+        // TODO ITEM 6: Agrega un elemento en la página HTML para mostrar los mensajes de error,
+        //y desde la función showError() haz visible o invisible el elemento para mostrar el texto de error.
+        //El error debe mostrarse solo por 5 segundos, luego de ésto, debe desaparecer.
+        //No dudes en las clases css error-bar, hide-bar y show-bar en el archivo de estilos.
     };
 
 
@@ -92,15 +106,8 @@
 
         let task = new Task(content);
 
-        // TODO ITEM 1: Llamar al API con el método POST para crear una nueva tarea.
-        //  - Como parámetro `callbackSuccess` envía una función que llame al método `addTaskToList` enviando la
-        //    variable `task` y limpia el valor del input#new-task.
-        //  - Como parámetro `callbackError` envía una función que llame al método `showError` enviando un mensaje de
-        //    error
-        //  - La llamada debe ser asíncrona.
-        //  - No te olvides de envíar el parámetro `task` para que se cree la tarea.
-        Ajax.sendPostRequest(API_URL, task, MediaFormat.JSON, (Task) => addTaskToList(task), (code) => showError(code, 'La tarea no ha podido ser añadida.'), true, MediaFormat.JSON);
-        document.getElementById('new-task').value = '';
+        // ITEM 1: Dentro de la función addTask llamar al API con el método POST para crear una nueva tarea. 
+
         return false;
     };
 
@@ -118,28 +125,12 @@
     const addOnChangeEvent = (task) => {
         const checkBox = document.getElementById(`task-${task.id}`).querySelector('label > input');
         checkBox.onchange = (e) => {
-            // TODO ITEM 3: leer el nuevo estado de la tarea (que solo puede ser TERMINADO(true) or PENDIENTE(false)) accediendo a la
-            //  propiedad `e.target.checked`. Con éste nuevo dato, debes mostrar la tarea junto con las tareas de su
-            //  mismo estado (e.g. si la tarea estaba pendiente pero el usuario hace click en el checkbox, el estado de
-            //  la tarea debe cambiar a terminada y debe ahora mostrarse con las otras tareas terminadas).
-            // - Una forma de hacerlo es remover directamente el archivo con el id `task-${task.id}` del DOM HTML
-            // y luego llamar a la función `addTaskToList` que re-creara la tarea con el nuevo estado en el lugar correcto.
-            // - No te olvides de llamar al API (método PUT) para modificar el estado de la tarea en el servidor.
-            if (e.target.checked) {
 
-                Ajax.sendPutRequest(`${API_URL}/${task.id}` , {status: TASK_STATUS.DONE}, MediaFormat.JSON, 
-                    (CurrentTask) => addTaskToList(JSON.parse(CurrentTask)), 
-                    (code) => showError(code, 'La tarea no ha podido ser modificada.'), true, MediaFormat.JSON);
-                
-                 document.getElementById(`task-${task.id}`).remove();
-            } 
-            else {
-                Ajax.sendPutRequest(`${API_URL}/${task.id}` ,
-                    {status: TASK_STATUS.PENDING}, MediaFormat.JSON, 
-                    (CurrentTask) => addTaskToList(JSON.parse(CurrentTask)), 
-                    (code) => showError(code, 'La tarea no ha podido ser modificada.'), true, MediaFormat.JSON);
-                 document.getElementById(`task-${task.id}`).remove();
-            }
+            // TODO ITEM 3: Dentro de la función addOnChangeEvent, en el evento onchange del checkbox,
+            //recuperar el nuevo valor del estado de la tarea, (si el checkbox está marcado significa 
+            //que la tarea está terminada, sino, sigue pendiente) y colocar la tarea entre 
+            //la lista de tareas que corresponda (tareas completadas o tareas pendientes). 
+            //Una vez hecho ésto, llamar al API con el método PUT para guardar el nuevo estado de la tarea.
         };
     };
 
@@ -210,18 +201,8 @@
         buttonOK.onclick = () => {
             currentTask.description = document.getElementById(`task-edit-${currentTask.id}`).value;
 
-            // TODO ITEM 2: llamar a la API con el método PUT cuando la descripción de la tarea es
-            //  modificada (`currentTask`).
-            //  - Como parámetro `callbackSuccess` envía una función que llame al método `revertHTMLChangeOnEdit`
-            //    enviando la variable `currentTask`.
-            //  - Como parámetro `callbackError` envía una función que llame al método `showError` enviando un mensaje de
-            //    error
-            //  - La llamada debe ser asíncrona.
-            //  - No te olvides de envíar el parámetro para que se cree la tarea.
-            Ajax.sendPutRequest(`${API_URL}/${currentTask.id}` , currentTask, MediaFormat.JSON,
-            (currentTask) => revertHTMLChangeOnEdit(currentTask),
-            (code) => showError(1, 'La tarea no ha podido ser modificada.'), true, MediaFormat.JSON);
-
+            // TODO ITEM 2: Dentro de la función editTask llamar a la API con el método PUT 
+            //cuando la descripción de la tarea es modificada. 
         };
 
         let buttonCancel = document.createElement('button');
@@ -268,8 +249,7 @@
      * @param id the identifier from the task
      */
     const removeTaskFromList = (id) => {
-        // TODO ITEM 4: remover del DOM HTML el elemento con id `task-${id}`
-        document.getElementById(`task-${id}`).remove();
+        // TODO ITEM 4: Dentro de la función removeTaskFromList, eliminar la tarea en cuestión del DOM HTML.
     };
 
     /**
@@ -278,13 +258,7 @@
      */
     const removeTask = (e) => {
         const id = e.target.dataset.id;
-        // TODO ITEM 5: enviar una petición DELETE al API con el {id} de la tarea.
-        //   - Como parámetro `callbackSuccess` enviar una función que llamé al método `removeTaskFromList`
-        //     enviando el id de la tarea.
-        //   - Como parámetro `callbackError` enviar una función que llame al método `showError` enviando
-        //     un mensaje de error
-        //   - La llamada debe ser asíncrona.
-        Ajax.sendDeleteRequest((`${API_URL}/${id}`),{},MediaFormat.JSON,
-        (id) => removeTaskFromList(id), error => showError(error), true);
+        // TODO Dentro de la función removeTask, llamar al API con el método DELETE para borrar
+        //la tarea del servidor.
     };
-})();
+})(jQuery);
