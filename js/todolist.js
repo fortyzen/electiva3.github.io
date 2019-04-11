@@ -276,7 +276,6 @@
     const removeTaskFromList = (id) => {
         // TODO ITEM 4: Dentro de la función removeTaskFromList, eliminar la tarea en cuestión del DOM HTML.
         $(`#task-${id}`).find('li').remove();
-        
     };
 
     /**
@@ -288,13 +287,14 @@
         // TODO ITEM 5: Dentro de la función removeTask, llamar al API con el método DELETE para borrar
         //la tarea del servidor.
         $.ajax({
+
             url: `${API_URL}/${id}`,
             type: 'DELETE',
             data: {"id": JSON.stringify(id)}, 
             contentType:'application/json',
             dataType: 'text',
             success: function (data) {
-                removeTaskFromList(id);
+                alert("saved");
             },
             error: function (xhr) {
                 showError(xhr.status, xhr.statusText);
