@@ -27,10 +27,11 @@
         //para recuperar la lista de tareas existentes. 
         let $tareas_pendientes = $('#incomplete-task');
         let $tareas_completadas = $('#completed-task');
-        let tareas;
+        var tareas = {};
         /*$.ajax({
             type: 'GET',
             url: API_URL,
+            contentType: 'application/json',
             success: function(tareas) {
                 $.each(tareas, function(i, tarea){
                     if(tarea.status === TASK_STATUS.PENDING){
@@ -42,7 +43,7 @@
                         '</li>');
                     } else{
                         console.log(tarea.status + ' completas');
-                        $tareas_completadas.append(
+                        $('tareas_completadas').append(
                             '<label>'+
                                 '<hr/>'+
                         '<input type="checkbox" checked> '+
@@ -54,13 +55,9 @@
                 });
             }
         });*/
-        console.log('otra forma');
-        $.get(API_URL, loadTasks(tareas), "json");
-        $.each(tareas, function(i, tarea){
-                console.log(tarea.description);
-            }
-        );
-        //console.log(tareas);
+        $(document).ready(function(){
+            $.get(`${API_URL}`, loadTasks);
+        });
     };
 
     /**
@@ -73,6 +70,13 @@
         //y desde la función showError() haz visible o invisible el elemento para mostrar el texto de error.
         //El error debe mostrarse solo por 5 segundos, luego de ésto, debe desaparecer.
         //No dudes en las clases css error-bar, hide-bar y show-bar en el archivo de estilos.
+        //code: xhr.status
+        //text: xhr.statusText
+        
+            
+        $('.error-bar').html('Status: ' + code + '\nStatusText: ' + text);
+        $('.error-bar').removeClass('hide-bar');
+        $('.error-bar').addClass('show-bar');
     };
 
 
@@ -98,8 +102,7 @@
      * @return {boolean}
      */
     const addTask = (e) => {
-        let newTaskInput = document.getElementById("new-task");
-        let content = newTaskInput.value;
+        let content = $('#new-task').val();
         if (content.length === 0) return false;
 
         e.preventDefault();
@@ -107,7 +110,10 @@
         let task = new Task(content);
 
         // ITEM 1: Dentro de la función addTask llamar al API con el método POST para crear una nueva tarea. 
-
+        $("button.add").click(() => {
+            $.post(`${API_URL}`, addTaskToList(task), 'application/json');
+            $('#new-task').val('');
+        });
         return false;
     };
 
@@ -123,14 +129,31 @@
      * Change the task to the completed or incomplete list (according to the status)
      */
     const addOnChangeEvent = (task) => {
-        const checkBox = document.getElementById(`task-${task.id}`).querySelector('label > input');
-        checkBox.onchange = (e) => {
-
+        
             // TODO ITEM 3: Dentro de la función addOnChangeEvent, en el evento onchange del checkbox,
             //recuperar el nuevo valor del estado de la tarea, (si el checkbox está marcado significa 
             //que la tarea está terminada, sino, sigue pendiente) y colocar la tarea entre 
             //la lista de tareas que corresponda (tareas completadas o tareas pendientes). 
             //Una vez hecho ésto, llamar al API con el método PUT para guardar el nuevo estado de la tarea.
+            const checkBox = document.getElementById(`task-${task.id}`).querySelector('label > input');
+            checkBox.onchange = (e) => {
+
+            $.ajax({
+                url: `${API_URL}/${task.id}`,
+                method: 'PUT',
+                contentType: 'application/json',
+                accept: {json: 'application/json'},
+                data: JSON.stringify({status: e.target.checked ? "TERMINADO": "PENDIENTE"}),
+                //{"key":"value"}
+                success: function(data) {
+                    // handle success
+                    html_load = $(`#task-${task.id}`).find('li').html();
+                    $(`#task-${task.id}`).find('li').remove();
+                },
+                error: function (xhr) {
+                    showError(xhr.status, xhr.statusText);
+                }
+            });
         };
     };
 
@@ -139,33 +162,22 @@
      * @param task the new task.
      */
     const addTaskToList = (task) => {
-        let newItem = document.createElement('li');
-        newItem.setAttribute('id', `task-${task.id}`);
+        let html = `<li id="task-${task.id}">
+            <label><input type="checkbox" ${task.status === TASK_STATUS.DONE ? "checked" : ""}/> ${task.description}</label>
+            <button class="edit" data-id="${task.id}">Editar</button>
+            <button class="delete" data-id="${task.id}">Borrar</button>
+        </li>`;
 
-        let label = document.createElement('label');
-        label.innerHTML = `<input type="checkbox" ${task.status === TASK_STATUS.DONE ? "checked" : ""}/> ${task.description}`;
+        let completo = '';
+        if (task.status  === TASK_STATUS.PENDING) {
+            completo = '#incomplete-tasks';
+        } else {
+            completo = '#completed-tasks';
+        }
 
-        let editButton = document.createElement('button');
-        editButton.innerText = 'Editar';
-        editButton.classList.add('edit');
-        editButton.setAttribute('data-id', task.id);
-        editButton.onclick = (e) => editTask(e);
-
-        let deleteButton = document.createElement('button');
-        deleteButton.innerText = 'Borrar';
-        deleteButton.classList.add('delete');
-        deleteButton.setAttribute('data-id', task.id);
-        deleteButton.onclick = (e) => removeTask(e);
-
-        newItem.appendChild(label);
-        newItem.appendChild(editButton);
-        newItem.appendChild(deleteButton);
-
-        if (task.status  === TASK_STATUS.PENDING)
-            document.getElementById('incomplete-tasks').appendChild(newItem);
-        else
-            document.getElementById('completed-tasks').appendChild(newItem);
-
+        $(completo).append(html);
+        $(completo +' .edit').click((e) => editTask(e));
+        $(completo +' .delete').click((e) => removeTask(e));
         addOnChangeEvent(task);
     };
 
@@ -202,7 +214,20 @@
             currentTask.description = document.getElementById(`task-edit-${currentTask.id}`).value;
 
             // TODO ITEM 2: Dentro de la función editTask llamar a la API con el método PUT 
-            //cuando la descripción de la tarea es modificada. 
+            //cuando la descripción de la tarea es modificada.
+            $.ajax({
+                url: API_URL,
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(currentTask),
+                success: function(){
+                    console.log(data);
+                },
+                error: function (xhr) {
+                    showError(xhr.status, xhr.statusText);
+                }
+            });
+
         };
 
         let buttonCancel = document.createElement('button');
@@ -250,6 +275,8 @@
      */
     const removeTaskFromList = (id) => {
         // TODO ITEM 4: Dentro de la función removeTaskFromList, eliminar la tarea en cuestión del DOM HTML.
+        $(`#task-${id}`).find('li').remove();
+        
     };
 
     /**
@@ -258,7 +285,20 @@
      */
     const removeTask = (e) => {
         const id = e.target.dataset.id;
-        // TODO Dentro de la función removeTask, llamar al API con el método DELETE para borrar
+        // TODO ITEM 5: Dentro de la función removeTask, llamar al API con el método DELETE para borrar
         //la tarea del servidor.
+        $.ajax({
+            url: `${API_URL}/${id}`,
+            type: 'DELETE',
+            data: {"id": JSON.stringify(id)}, 
+            contentType:'application/json',
+            dataType: 'text',
+            success: function (data) {
+                removeTaskFromList(id);
+            },
+            error: function (xhr) {
+                showError(xhr.status, xhr.statusText);
+            }
+        });
     };
 })(jQuery);
