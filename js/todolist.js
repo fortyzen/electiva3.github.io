@@ -25,39 +25,38 @@
         //ITEM 0: Busca una función equivalente a document.onreadystatechange proveída por jQuery 
         //y asegurate que dentro se ejecute una función que llame al API con el método GET 
         //para recuperar la lista de tareas existentes. 
-        let $tareas_pendientes = $('#incomplete-task');
-        let $tareas_completadas = $('#completed-task');
-        var tareas = {};
-        /*$.ajax({
+        let $tareas_pendientes = $('#incomplete-tasks');
+        let $tareas_completadas = $('#completed-tasks');
+        $.ajax({
             type: 'GET',
-            url: API_URL,
+            url: `${API_URL}`,
             contentType: 'application/json',
             success: function(tareas) {
                 $.each(tareas, function(i, tarea){
                     if(tarea.status === TASK_STATUS.PENDING){
                         console.log(tarea.status + ' ' + tarea.description);
-                        $('#incomplete-task').append('<li>'+
+                        $tareas_pendientes.append('<li>'+
                         '<label><input type="checkbox"/>'+ tarea.description + '</label>'
                         +'<button class="edit">Editar</button>'+
                         '<button class="delete">Borrar</button>'+
                         '</li>');
                     } else{
                         console.log(tarea.status + ' completas');
-                        $('tareas_completadas').append(
+                        $tareas_completadas.append(
                             '<label>'+
                                 '<hr/>'+
-                        '<input type="checkbox" checked> '+
+                        '<input type="checkbox" checked>'+
                         tarea.description +
-                        ' </label> '+
+                        '</label> '+
                         ' <button class="edit">Editar</button> '+
                         ' <button class="delete">Borrar</button> ');
                     }
                 });
             }
-        });*/
-        $(document).ready(function(){
-            $.get(`${API_URL}`, loadTasks);
         });
+        /*$(document).ready(function(){
+            $.get(`${API_URL}`, null, (datos,status,jqxhr) => loadTasks(datos));
+        });*/
     };
 
     /**
@@ -87,7 +86,7 @@
      */
     const loadTasks = (array) => {
 
-        let tasks = JSON.parse(array);
+        let tasks = array;
         for (let i in tasks) {
             if (tasks.hasOwnProperty(i)) {
                 addTaskToList(tasks[i]);
@@ -162,22 +161,46 @@
      * @param task the new task.
      */
     const addTaskToList = (task) => {
-        let html = `<li id="task-${task.id}">
+        /*let html = `<li id="task-${task.id}">
             <label><input type="checkbox" ${task.status === TASK_STATUS.DONE ? "checked" : ""}/> ${task.description}</label>
             <button class="edit" data-id="${task.id}">Editar</button>
             <button class="delete" data-id="${task.id}">Borrar</button>
         </li>`;
 
-        let completo = '';
+        let tipo = '';
         if (task.status  === TASK_STATUS.PENDING) {
-            completo = '#incomplete-tasks';
+            tipo = '#incomplete-tasks';
         } else {
-            completo = '#completed-tasks';
+            tipo = '#completed-tasks';
         }
 
-        $(completo).append(html);
-        $(completo +' .edit').click((e) => editTask(e));
-        $(completo +' .delete').click((e) => removeTask(e));
+        $(tipo).append(html);
+        $(tipo +'.edit').click((e) => editTask(e));
+        $(tipo +'.delete').click((e) => removeTask(e));*/
+
+        let $tareas_pendientes = $('#incomplete-tasks');
+        let $tareas_completadas = $('#completed-tasks');
+        let tipo = '';
+        if(task.status === TASK_STATUS.PENDING){
+            $tareas_pendientes.append('<li>'+
+            '<label><input type="checkbox"/>'+ task.description + '</label>'
+            +'<button class="edit">Editar</button>'+
+            '<button class="delete">Borrar</button>'+
+            '</li>');
+            tipo = '#incomplete-tasks';
+        } else{
+            $tareas_completadas.append(
+                '<label>'+
+                    '<hr/>'+
+            '<input type="checkbox" checked>'+
+            task.description +
+            '</label> '+
+            ' <button class="edit">Editar</button> '+
+            ' <button class="delete">Borrar</button> ');
+            tipo = '#completed-tasks';
+        }
+        $(tipo +' .edit').click((e) => editTask(e));
+        $(tipo +' .delete').click((e) => removeTask(e));
         addOnChangeEvent(task);
     };
 
@@ -216,7 +239,7 @@
             // TODO ITEM 2: Dentro de la función editTask llamar a la API con el método PUT 
             //cuando la descripción de la tarea es modificada.
             $.ajax({
-                url: API_URL,
+                url: `${API_URL}`,
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(currentTask),
@@ -282,19 +305,19 @@
      * This method sends a DELETE request to remove the task from the server.
      * @param e
      */
-    const removeTask = (e) => {
-        const id = e.target.dataset.id;
+    const removeTask = (event) => {
+        const id = event.target.dataset.id;
         // TODO ITEM 5: Dentro de la función removeTask, llamar al API con el método DELETE para borrar
         //la tarea del servidor.
         $.ajax({
-
             url: `${API_URL}/${id}`,
             type: 'DELETE',
             data: {"id": JSON.stringify(id)}, 
             contentType:'application/json',
             dataType: 'text',
             success: function (data) {
-                alert("saved");
+                removeTaskFromList(id);
+                return null;
             },
             error: function (xhr) {
                 showError(xhr.status, xhr.statusText);
