@@ -1,7 +1,7 @@
 (($) => {
     'use strict';
 
-    const API_URL = 'https://task-backend-fpuna.herokuapp.com/tasks';
+    const API_URL = 'http://localhost:3000/tasks';
     const TASK_STATUS = {
         PENDING: 'PENDIENTE',
         DONE: 'TERMINADO'
