@@ -19,6 +19,8 @@ tareasRouter.use(bodyParser.json());
  */
 function allRequest(req, res, next) {
   res.statusCode = 200;
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader("Access-Control-Allow-Headers", "Accept,Content-Type");
   res.setHeader("Content-Type", "application/json");
   next();
 }
@@ -30,6 +32,7 @@ function allRequest(req, res, next) {
  * @param {object} next  siguiente middleware a ejecutarse
  */
 function showOptions(req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader("Access-Control-Allow-Headers", "Accept,Content-Type");
   res.setHeader("Access-Control-Allow-Methods", "OPTIONS,GET,POST");
   res.setHeader("Allow", "OPTIONS,GET,POST");
@@ -37,6 +40,7 @@ function showOptions(req, res, next) {
 }
 
 function showOptionsPerResource(req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader("Access-Control-Allow-Headers", "Accept,Content-Type");
   res.setHeader("Access-Control-Allow-Methods", "OPTIONS,GET,DELETE,PUT");
   res.setHeader("Allow", "OPTIONS,GET,DELETE,PUT");
@@ -113,20 +117,32 @@ function validContentTypeHeader(contentTypeHeader) {
  * @param {object} res Respuesta HTTP
  */
 async function obtenerTareas(req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader("Access-Control-Allow-Headers", "Accept,Content-Type");
   const acceptHeader = req.header("Accept");
   if (!validAcceptHeader(acceptHeader)) {
     res.statusCode = 400;
     res.send({
-      details:
-        "This endpoint only support 'application/json' media type, please verify your `Accept` header ",
+      details: "This endpoint (obtenerTareas) only support 'application/json' media type, please verify your `Accept` header ",
       message: `Media not supported :  ${acceptHeader}`
     });
     res.end();
     return;
   }
-  const tareas = await tareasLogic.getAll();
-  res.send(tareas);
-  res.end();
+  try{
+    const tareas = await tareasLogic.getAll();
+    res.send(tareas);
+    res.end();
+  }
+  catch(error){
+    res.statusCode = 400;
+    res.send({
+      message: `No hay tareas`,
+      details: "NOT FOUND"
+    });
+    res.end();
+  }
+  
 }
 
 /**
@@ -137,6 +153,8 @@ async function obtenerTareas(req, res, next) {
  * @param {object} res Respuesta HTTP
  */
 async function crearTarea(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader("Access-Control-Allow-Headers", "Accept,Content-Type");
   const contenTypeHeader = req.header("Content-Type");
   if (!validContentTypeHeader(contenTypeHeader)) {
     res.statusCode = 400;
@@ -147,17 +165,28 @@ async function crearTarea(req, res) {
     res.end();
     return;
   }
-
-  const jsonBody = req.body;
-
-  const modeloACrear = {
+  try{
+    const jsonBody = req.body;
+    console.info('jsonBody._id: ' + `${jsonBody._id}` + ' and jsonBody.id: ' +  `${jsonBody.id}`);
+    const modeloACrear = {
+    id: jsonBody._id, //revisar
     description: jsonBody.description,
     status: "PENDIENTE"
-  };
+    };
 
-  const tareaCreada = await tareasLogic.create(modeloACrear);
-  res.send(tareaCreada);
-  res.end();
+    const tareaCreada = await tareasLogic.create(modeloACrear);
+    res.send(tareaCreada);
+    res.end();
+  }
+  catch (error){
+    res.statusCode = 400;
+    res.send({
+      message: `No se pudo crear la tarea`,
+      details: `Error: ${error}`
+    });
+    res.end();
+  }
+  
 }
 
 /**
@@ -167,21 +196,72 @@ async function crearTarea(req, res) {
  * @param {object} res Respuesta HTTP.
  */
 async function obtenerTarea(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader("Access-Control-Allow-Headers", "Accept,Content-Type");
   const {idTarea}  = req.params;
   try{
     const tarea = await tareasLogic.getOne(idTarea);
     res.send(tarea);
     res.end();
+    return res;
   }
   catch(error){
     res.statusCode = 400;
     res.send({
-      message: `Can't find objecti with id : ${idTarea}`,
-      details: "This endpoint expected a valid object identifier"
+      message: `El objeto con id : ${idTarea} no existe`,
+      details: "NOT FOUND"
     });
     res.end();
   }
-  
+}
+  /**
+ * Borra una tarea dado su identificador idTarea
+ * 
+ * @param {object} req Petición HTTP.
+ * @param {object} res Respuesta HTTP.
+ */
+  async function borrarTarea (req, res){
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader("Access-Control-Allow-Headers", "Accept,Content-Type");
+    const {idTarea}  = req.params;
+    try{
+      const tareaBorrada = await tareasLogic.erase(idTarea);
+      res.send(tareaBorrada);
+      res.end();
+    }
+    catch(error){
+      res.statusCode = 400;
+      res.send({
+        message: `El objeto con id : ${idTarea} no existe`,
+        details: "NOT FOUND"
+      });
+      res.end();
+    }
+  }
+  /**
+ * Edita una tarea dado su identificador idTarea
+ * 
+ * @param {object} req Petición HTTP.
+ * @param {object} res Respuesta HTTP.
+ */
+  async function editarTarea (req, res) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader("Access-Control-Allow-Headers", "Accept,Content-Type");
+    const {idTarea}  = req.params;
+    const jsonBody = req.body;
+    try{
+      const tareaEditada = await tareasLogic.update(idTarea, jsonBody.description);
+      res.send(tareaEditada);
+      res.end();
+    }
+    catch(error){
+      res.statusCode = 400;
+      res.send({
+        message: `El objeto con id : ${idTarea} no existe`,
+        details: "NOT FOUND"
+      });
+      res.end();
+  }
 }
 
 tareasRouter
@@ -209,6 +289,7 @@ tareasRouter
     res.end("POST operation is not suported on /tareas/" + req.params.idTarea);
   })
   .put((req, res, next) => {
+    editarTarea(req, res);
     res.write("Actualizando la tarea: " + req.params.idTarea + "\n");
     res.end(
       "Actualizando la tarea: " +
@@ -218,6 +299,7 @@ tareasRouter
     );
   })
   .delete((req, res, next) => {
+    
     res.end("Borrando la tarea : " + req.params.idTarea);
   });
 

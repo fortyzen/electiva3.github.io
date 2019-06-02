@@ -107,12 +107,24 @@
         e.preventDefault();
 
         let task = new Task(content);
-
-        // ITEM 1: Dentro de la función addTask llamar al API con el método POST para crear una nueva tarea. 
-        $("button.add").click(() => {
-            $.post(`${API_URL}`, addTaskToList(task), 'application/json');
-            $('#new-task').val('');
+        $.ajax({
+            type:"POST",
+            url: `${API_URL}`, 
+            data: task,
+            contentType: 'application/json',
+            dataType: 'json', // El tipo de datos esperados del servidor.
+            success: (data) => {
+                addTaskToList(data);
+                $('#new-task').val('');
+            },
+            error: function(data){
+                showError(data.status, `addtask-Error: ${data.statusText}`)
+            }
         });
+        // ITEM 1: Dentro de la función addTask llamar al API con el método POST para crear una nueva tarea. 
+        /*$("button.add").click(() => {
+            $.post(`${API_URL}`, addTaskToList(task), 'application/json');
+        });*/
         return false;
     };
 
@@ -161,23 +173,6 @@
      * @param task the new task.
      */
     const addTaskToList = (task) => {
-        /*let html = `<li id="task-${task.id}">
-            <label><input type="checkbox" ${task.status === TASK_STATUS.DONE ? "checked" : ""}/> ${task.description}</label>
-            <button class="edit" data-id="${task.id}">Editar</button>
-            <button class="delete" data-id="${task.id}">Borrar</button>
-        </li>`;
-
-        let tipo = '';
-        if (task.status  === TASK_STATUS.PENDING) {
-            tipo = '#incomplete-tasks';
-        } else {
-            tipo = '#completed-tasks';
-        }
-
-        $(tipo).append(html);
-        $(tipo +'.edit').click((e) => editTask(e));
-        $(tipo +'.delete').click((e) => removeTask(e));*/
-
         let $tareas_pendientes = $('#incomplete-tasks');
         let $tareas_completadas = $('#completed-tasks');
         let tipo = '';
@@ -202,6 +197,22 @@
         $(tipo +' .edit').click((e) => editTask(e));
         $(tipo +' .delete').click((e) => removeTask(e));
         addOnChangeEvent(task);
+        /*let html = `<li id="task-${task.id}">
+            <label><input type="checkbox" ${task.status === TASK_STATUS.DONE ? "checked" : ""}/> ${task.description}</label>
+            <button class="edit" data-id="${task.id}">Editar</button>
+            <button class="delete" data-id="${task.id}">Borrar</button>
+        </li>`;
+
+        let tipo = '';
+        if (task.status  === TASK_STATUS.PENDING) {
+            tipo = '#incomplete-tasks';
+        } else {
+            tipo = '#completed-tasks';
+        }
+
+        $(tipo).append(html);
+        $(tipo +'.edit').click((e) => editTask(e));
+        $(tipo +'.delete').click((e) => removeTask(e));*/
     };
 
     /**
@@ -242,6 +253,7 @@
                 url: `${API_URL}`,
                 type: 'POST',
                 contentType: 'application/json',
+                dataType: 'json',
                 data: JSON.stringify(currentTask),
                 success: function(){
                     console.log(data);

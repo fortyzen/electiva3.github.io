@@ -24,7 +24,7 @@ async function erase(id) {
   return;
 }
 
-async function getAll() {
+async function getAll(req, res) {
   let tareas = await Tarea.find();
   console.info(`Se obtuvieron ${tareas.length} tareas.`);
   return tareas;

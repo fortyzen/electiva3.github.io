@@ -1,8 +1,8 @@
-const express = require("express");
 const http = require("http");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 
+const express = require("express");
 const tareasRouter = require("./routes/tareas");
 
 const hostname = process.env.HOSTNAME || "0.0.0.0";
@@ -16,6 +16,8 @@ app.use(bodyParser.json());
 // Redirige las peticiones con URL que terminan en / al equivalente sin la barra final.
 // Ej: http://localhost/tasks/ se redirige a https://localhost/tasks
 app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   const test = /\?[^]*\//.test(req.url);
   if (req.url.substr(-1) === '/' && req.url.length > 1 && !test)
     res.redirect(301, req.url.slice(0, -1));
@@ -25,6 +27,8 @@ app.use((req, res, next) => {
 
 app.use("/tasks",tareasRouter);
 app.use((req,res,next)=>{
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   try{
     next()
   }catch(error){
@@ -33,6 +37,8 @@ app.use((req,res,next)=>{
   }
 })
 app.use("/",(req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   res.statusCode = 200;
   res.setHeader("Content-type", "text/html");
   res.end(
