@@ -31,6 +31,8 @@
             type: 'GET',
             url: `${API_URL}`,
             contentType: 'application/json',
+            dataType: 'json',
+            accept: {json: 'application/json'},
             success: function(tareas) {
                 $.each(tareas, function(i, tarea){
                     if(tarea.status === TASK_STATUS.PENDING){
@@ -113,6 +115,7 @@
             data: task,
             contentType: 'application/json',
             dataType: 'json', // El tipo de datos esperados del servidor.
+            accept: {json: 'application/json'},
             success: (data) => {
                 addTaskToList(data);
                 $('#new-task').val('');

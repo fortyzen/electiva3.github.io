@@ -22,6 +22,7 @@ function allRequest(req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader("Access-Control-Allow-Headers", "Accept,Content-Type");
   res.setHeader("Content-Type", "application/json");
+  res.setHeader("Accept", "application/json");
   next();
 }
 
@@ -119,6 +120,8 @@ function validContentTypeHeader(contentTypeHeader) {
 async function obtenerTareas(req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader("Access-Control-Allow-Headers", "Accept,Content-Type");
+  res.setHeader("Content-Type", "application/json");
+  res.setHeader("Accept", "application/json");
   const acceptHeader = req.header("Accept");
   if (!validAcceptHeader(acceptHeader)) {
     res.statusCode = 400;
