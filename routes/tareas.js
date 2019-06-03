@@ -292,7 +292,7 @@ tareasRouter
     res.end("POST operation is not suported on /tareas/" + req.params.idTarea);
   })
   .put((req, res, next) => {
-    editarTarea(req, res);
+    editarTarea(req,res);
     res.write("Actualizando la tarea: " + req.params.idTarea + "\n");
     res.end(
       "Actualizando la tarea: " +
@@ -302,7 +302,7 @@ tareasRouter
     );
   })
   .delete((req, res, next) => {
-    
+    borrarTarea(req,res);
     res.end("Borrando la tarea : " + req.params.idTarea);
   });
 
